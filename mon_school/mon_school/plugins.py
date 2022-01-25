@@ -27,21 +27,25 @@ class SketchesTab(ProfileTab):
 class LiveCodeExtension(PageExtension):
     def render_header(self):
         livecode_url = frappe.get_value("LMS Settings", None, "livecode_url")
-        context = {
-            "livecode_url": livecode_url
-        }
+        context = frappe._dict(self.context, livecode_url=livecode_url)
         return frappe.render_template(
             "templates/livecode/extension_header.html",
             context)
 
     def render_footer(self):
         livecode_url = frappe.get_value("LMS Settings", None, "livecode_url")
-        context = {
-            "livecode_url": livecode_url
-        }
+        context = frappe._dict(self.context)
+        context.livecode_url = livecode_url
+        context.course_script = self.get_course_script(context.course)
         return frappe.render_template(
             "templates/livecode/extension_footer.html",
             context)
+
+    def get_course_script(self, course):
+        try:
+            return frappe.get_doc("Course Script", course.name)
+        except frappe.exceptions.DoesNotExistError:
+            return None
 
 def exercise_renderer(argument):
     exercise = frappe.get_doc("Exercise", argument)

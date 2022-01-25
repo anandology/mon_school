@@ -46,6 +46,20 @@
   </div>
 </template>
 
+{% if course_script and course_script.javascript %}
+<script type="text/javascript">
+  {{ course_script.javascript }}
+</script>
+{% endif %}
+
+{% if course_script and course_script.css %}
+
+<style type="text/css">
+  {{ course_script.css }}
+</style>
+
+{% endif %}
+
 <script type="text/javascript">
   $(function() {
     var editorLookup = {};
